@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "querido-diario-ingestor"
+version = "0.1.0"
+description = ""
+authors = ["Jefersonalves <ferreira.jefersonn@gmail.com>"]
+readme = "README.md"
+packages = [{include = "querido_diario_ingestor"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+boto3 = "^1.34.64"
+requests = "^2.31.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
