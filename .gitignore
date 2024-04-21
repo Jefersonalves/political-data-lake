@@ -2,6 +2,7 @@
 *.tfstate
 *.terraform
 *.terraform.lock.hcl
+*.tfstate.backup
 
 # ignore python app files
 *.pyc
