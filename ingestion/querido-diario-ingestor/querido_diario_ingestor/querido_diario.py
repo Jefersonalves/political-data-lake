@@ -49,7 +49,10 @@ def lambda_handler(event, context=None):
         s3 = boto3.client("s3")
         file_content = json.dumps(r.json())
         s3.put_object(Body=file_content, Bucket=bucket_name, Key=file_name)
-        return {"statusCode": 200, "body": "File uploaded successfully."}
+        return {
+            "statusCode": 200,
+            "body": f"File uploaded successfully to {file_name}.",
+        }
     else:
         logging.info(f"No gazettes found for {date} in {territory_id}")
         return {"statusCode": 200, "body": "No files to upload."}
