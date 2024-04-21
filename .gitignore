@@ -11,3 +11,6 @@ package/
 *.zip
 *.venv
 __pycache__/
+
+# ignore airflow files
+orchestration/logs/
