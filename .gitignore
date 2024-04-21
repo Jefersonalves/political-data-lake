@@ -2,3 +2,12 @@
 *.tfstate
 *.terraform
 *.terraform.lock.hcl
+*.tfstate.backup
+
+# ignore python app files
+*.pyc
+dist/
+package/
+*.zip
+*.venv
+__pycache__/
