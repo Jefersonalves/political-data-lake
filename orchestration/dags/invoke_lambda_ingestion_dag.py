@@ -1,7 +1,9 @@
-
 from datetime import datetime
+
 from airflow import DAG
-from airflow.providers.amazon.aws.operators.lambda_function import LambdaInvokeFunctionOperator
+from airflow.providers.amazon.aws.operators.lambda_function import (
+    LambdaInvokeFunctionOperator,
+)
 
 default_args = {
     "owner": "airflow",
@@ -19,11 +21,10 @@ with DAG(
     catchup=True,
 ) as dag:
 
-    #https://airflow.apache.org/docs/apache-airflow-providers-amazon/7.4.1/_api/airflow/providers/amazon/aws/operators/lambda_function/index.html
     invoke_lambda_function = LambdaInvokeFunctionOperator(
         task_id="invoke_lambda_function",
         function_name="ingestion_lambda",
-        aws_conn_id='aws_default',
+        aws_conn_id="aws_default",
         payload='{"date": "{{ ds }}", "territory_id": "2704302", "bucket_name": "political-datalake-raw"}',
         region_name="sa-east-1",
     )
