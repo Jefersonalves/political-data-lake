@@ -14,6 +14,10 @@ provider "aws" {
   profile = "pessoal"
 }
 
+locals {
+  envs = { for tuple in regexall("(.*)=(.*)", file("../../orchestration/.env")) : tuple[0] => tuple[1] }
+}
+
 resource "aws_key_pair" "airflowkey" {
   key_name   = "airflow-key"
   public_key = file("~/.ssh/airflow-key.pub")
@@ -71,10 +75,13 @@ resource "aws_elastic_beanstalk_environment" "airflowenv" {
   }
 
   #aws:elasticbeanstalk:application:environment
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "PARAM1"
-    value     = "value1"
+  dynamic "setting" {
+      for_each = local.envs
+      content {
+          namespace = "aws:elasticbeanstalk:application:environment"
+          name      = setting.key
+          value     = setting.value
+      }
   }
 }
 
