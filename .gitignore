@@ -1,3 +1,5 @@
+*.env
+
 # ignore terraform files
 *.tfstate
 *.terraform
@@ -14,3 +16,8 @@ __pycache__/
 
 # ignore airflow files
 orchestration/logs/
+
+# Elastic Beanstalk Files
+orchestration/.elasticbeanstalk/*
+!orchestration/.elasticbeanstalk/*.cfg.yml
+!orchestration/.elasticbeanstalk/*.global.yml
