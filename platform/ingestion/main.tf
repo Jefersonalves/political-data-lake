@@ -35,6 +35,12 @@ resource "aws_iam_role_policy_attachment" "ingestion_lambda_role_policy_attachme
     policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
+# Attach AWSLambdaBasicExecutionRole to the role
+resource "aws_iam_role_policy_attachment" "ingestion_lambda_role_policy_attachment_2" {
+    role       = aws_iam_role.ingestion_lambda_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 ## create lambda function using local lambda.zip file
 resource "aws_lambda_function" "ingestion_lambda" {
   filename      = "../../ingestion/querido-diario-ingestor/lambda.zip"
