@@ -38,7 +38,7 @@ resource "aws_elastic_beanstalk_environment" "airflowenv" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
-    value     = "t2.micro"
+    value     = "t3.medium"
   }
 
   setting {
