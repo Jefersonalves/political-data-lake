@@ -15,7 +15,7 @@ provider "aws" {
 }
 
 locals {
-  envs = { for tuple in regexall("(.*)=(.*)", file("../../orchestration/.env")) : tuple[0] => tuple[1] }
+  envs = { for tuple in regexall("(.*)=(.*)", file(".env")) : tuple[0] => tuple[1] }
 }
 
 resource "aws_key_pair" "airflowkey" {

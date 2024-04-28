@@ -43,7 +43,7 @@ resource "aws_iam_role_policy_attachment" "ingestion_lambda_role_policy_attachme
 
 ## create lambda function using local lambda.zip file
 resource "aws_lambda_function" "ingestion_lambda" {
-  filename      = "../../ingestion/querido-diario-ingestor/lambda.zip"
+  filename      = "lambda.zip"
   function_name = "ingestion_lambda"
   role          = aws_iam_role.ingestion_lambda_role.arn
   handler       = "querido_diario_ingestor.querido_diario.lambda_handler"
