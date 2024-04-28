@@ -5,9 +5,11 @@ and terraform configuration to deploy the lambda function in AWS.
 ## Deploy
 To deploy, first generate the zip file to be used by the lambda function:
 ```sh
-cd querido-diario-ingestor; poetry build
-cd querido-diario-ingestor; poetry run pip install --upgrade -t package dist/*.whl
-cd querido-diario-ingestor/package; zip -r ../lambda.zip . -x '*.pyc'
+cd querido-diario-ingestor
+poetry build
+poetry run pip install --upgrade -t package dist/*.whl
+zip -r ../lambda.zip ./package -x '*.pyc'
+cd ..
 ```
 
 Then, apply the terraform configuration:
