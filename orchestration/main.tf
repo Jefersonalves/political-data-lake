@@ -47,34 +47,30 @@ resource "aws_elastic_beanstalk_environment" "airflowenv" {
     value     = "aws-elasticbeanstalk-ec2-role"
   }
 
-  #key-pair
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "EC2KeyName"
     value     = aws_key_pair.airflowkey.key_name
   }
 
-  #aws:elasticbeanstalk:environment
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "EnvironmentType"
     value     = "SingleInstance"
   }
 
-  #aws:elb:listener
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "HTTP"
   }
-  #InstanceProtocol
+
   setting {
     namespace = "aws:elb:listener"
     name      = "InstanceProtocol"
     value     = "HTTP"
   }
 
-  #aws:elasticbeanstalk:application:environment
   dynamic "setting" {
       for_each = local.envs
       content {
