@@ -33,7 +33,7 @@ def lambda_handler(event, context=None):
     bucket_name = event["bucket_name"]
     date = event["date"]
     territory_id = event["territory_id"]
-    file_name = f"querido-diario/scraped_date={date}/territory_id={territory_id}/{territory_id}.json"
+    file_name = f"querido-diario/gazettes/scraped_date={date}/territory_id={territory_id}/{territory_id}.json"
 
     # https://queridodiario.ok.org.br/api/docs
     url = f"https://queridodiario.ok.org.br/api/gazettes?territory_ids={territory_id}&scraped_since={date}T00:00:00&scraped_until={date}T23:59:59"
