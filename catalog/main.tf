@@ -117,7 +117,7 @@ resource "aws_glue_crawler" "raw_crawler" {
 }
 
 resource "aws_glue_crawler" "stage_crawler" {
-  database_name = aws_glue_catalog_database.raw_database.name
+  database_name = aws_glue_catalog_database.stage_database.name
   name          = "political_data_lake_stage_crawler"
   description   = "Crawler for political data lake stage data"
   role          = aws_iam_role.glue_crawler_role.arn
@@ -135,7 +135,7 @@ resource "aws_glue_crawler" "stage_crawler" {
 }
 
 resource "aws_glue_crawler" "analytics_crawler" {
-  database_name = aws_glue_catalog_database.raw_database.name
+  database_name = aws_glue_catalog_database.analytics_database.name
   name          = "political_data_lake_analytics_crawler"
   description   = "Crawler for political data lake analytics data"
   role          = aws_iam_role.glue_crawler_role.arn
