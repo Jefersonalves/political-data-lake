@@ -14,7 +14,7 @@ provider "aws" {
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/emrserverless_application
 resource "aws_emrserverless_application" "emr_app" {
-  name          = "etl-serveless-app"
+  name          = "serveless_etl_app"
   release_label = "emr-7.1.0"
   type          = "spark"
 
@@ -25,7 +25,8 @@ resource "aws_emrserverless_application" "emr_app" {
       worker_count = 1
       worker_configuration {
         cpu    = "4 vCPU"
-        memory = "8 GB"
+        memory = "16 GB"
+        disk   = "20 GB"
       }
     }
   }
@@ -34,19 +35,19 @@ resource "aws_emrserverless_application" "emr_app" {
     initial_capacity_type = "Executor"
 
     initial_capacity_config {
-      worker_count = 1
+      worker_count = 2
       worker_configuration {
         cpu    = "4 vCPU"
-        memory = "8 GB"
-        disk   = "32 GB"
+        memory = "16 GB"
+        disk   = "20 GB"
       }
     }
   }
 
   maximum_capacity {
-    cpu    = "16 vCPU"
-    memory = "32 GB"
-    disk = "128 GB"
+    cpu    = "12 vCPU"
+    memory = "48 GB"
+    disk = "60 GB"
   }
 
 }
