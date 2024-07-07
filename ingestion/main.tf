@@ -9,7 +9,7 @@ terraform {
 
 provider "aws" {
   region  = "sa-east-1"
-  profile = "pessoal"
+  profile = "politicaldatalake"
 }
 
 # Create a role for the lambda function with access to s3

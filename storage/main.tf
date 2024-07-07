@@ -15,7 +15,7 @@ variable bucket_prefix {
 
 provider "aws" {
   region  = "sa-east-1"
-  profile = "pessoal"
+  profile = "politicaldatalake"
 }
 
 resource "aws_s3_bucket" "raw_bucket" {
