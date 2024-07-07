@@ -29,3 +29,7 @@ resource "aws_s3_bucket" "stage_bucket" {
 resource "aws_s3_bucket" "analytics_bucket" {
     bucket = format("%sanalytics", var.bucket_prefix)
 }
+
+resource "aws_s3_bucket" "scripts_bucket" {
+    bucket = format("%sscripts", var.bucket_prefix)
+}

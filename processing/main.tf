@@ -43,8 +43,8 @@ resource "aws_iam_policy" "emr_serverless_policy" {
                 "s3:DeleteObject"
             ],
             Resource = [
-                "arn:aws:s3:::political-datalake-emr",
-                "arn:aws:s3:::political-datalake-emr/*",
+                "arn:aws:s3:::political-datalake-scripts",
+                "arn:aws:s3:::political-datalake-scripts/*",
                 "arn:aws:s3:::political-datalake-raw",
                 "arn:aws:s3:::political-datalake-raw/*",
                 "arn:aws:s3:::political-datalake-stage",
