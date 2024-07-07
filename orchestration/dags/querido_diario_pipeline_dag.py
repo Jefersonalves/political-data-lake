@@ -64,6 +64,7 @@ with DAG(
         job_driver={
             "sparkSubmit": {
                 "entryPoint": "s3://political-datalake-scripts/raw_to_stage.py",
+                "sparkSubmitParameters": "--conf spark.hadoop.hive.metastore.client.factory.class=com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory",
             }
         },
     )
