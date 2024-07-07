@@ -13,6 +13,11 @@ provider "aws" {
 }
 
 
+resource "aws_s3_bucket" "scripts_bucket" {
+    bucket = "political-datalake-scripts"
+}
+
+
 # Create policy to be used by emr serverless runtime role
 # https://docs.aws.amazon.com/emr/latest/EMR-Serverless-UserGuide/security-iam-runtime-role.html
 resource "aws_iam_policy" "emr_serverless_policy" {
