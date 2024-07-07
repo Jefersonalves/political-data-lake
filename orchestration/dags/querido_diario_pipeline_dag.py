@@ -2,6 +2,7 @@ from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.providers.amazon.aws.operators.emr import EmrServerlessStartJobOperator
 from airflow.providers.amazon.aws.operators.lambda_function import (
     LambdaInvokeFunctionOperator,
 )
@@ -34,7 +35,7 @@ with DAG(
     "querido_diario_pipeline_dag",
     default_args=default_args,
     description="Run querido diario data pipeline",
-    schedule_interval="0 0 * * *",
+    schedule_interval=None,
     start_date=datetime(2024, 4, 1),
     tags=["data-engineer", "ingestion"],
     catchup=True,
@@ -51,8 +52,20 @@ with DAG(
     invoke_lambda_function = LambdaInvokeFunctionOperator.partial(
         task_id="invoke_lambda_function",
         function_name="ingestion_lambda",
-        aws_conn_id="aws_default",
+        aws_conn_id="aws_politicaldatalake",
         region_name="sa-east-1",
     ).expand(payload=get_territories.output)
 
-    get_territories >> invoke_lambda_function
+    raw_to_stage_job = EmrServerlessStartJobOperator(
+        aws_conn_id="aws_politicaldatalake",
+        task_id="raw_to_stage_job",
+        application_id="{{ var.value.emr_serverless_application_id }}",
+        execution_role_arn="{{ var.value.emr_serverless_execution_role_arn }}",
+        job_driver={
+            "sparkSubmit": {
+                "entryPoint": "s3://political-datalake-scripts/raw_to_stage.py",
+            }
+        },
+    )
+
+    get_territories >> invoke_lambda_function >> raw_to_stage_job
