@@ -9,7 +9,7 @@ terraform {
 
 variable bucket_prefix {
   type        = string
-  default     = "political-datalake-"
+  default     = "political-datalake"
   description = "Prefix to be added to the bucket name"
 }
 
@@ -19,17 +19,13 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "raw_bucket" {
-    bucket = format("%sraw", var.bucket_prefix)
+    bucket = format("%s-raw", var.bucket_prefix)
 }
 
 resource "aws_s3_bucket" "stage_bucket" {
-    bucket = format("%sstage", var.bucket_prefix)
+    bucket = format("%s-stage", var.bucket_prefix)
 }
 
 resource "aws_s3_bucket" "analytics_bucket" {
-    bucket = format("%sanalytics", var.bucket_prefix)
-}
-
-resource "aws_s3_bucket" "scripts_bucket" {
-    bucket = format("%sscripts", var.bucket_prefix)
+    bucket = format("%s-analytics", var.bucket_prefix)
 }
