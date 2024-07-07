@@ -139,3 +139,8 @@ resource "aws_emrserverless_application" "emr_app" {
   }
 
 }
+
+
+output emr_serverless_application_id {
+    value = aws_emrserverless_application.emr_app.id
+}
