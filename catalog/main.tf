@@ -46,6 +46,27 @@ resource "aws_iam_policy" "read_datalake_policy" {
   })
 }
 
+resource "aws_iam_policy" "logs_policy" {
+  name = "policy-crawlers-logs"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+            "logs:DescribeLogStreams",
+            "logs:DescribeLogGroups"
+        ]
+        Effect = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
 resource "aws_iam_role" "glue_crawler_role" {
     name = "political_crawler_role"
     assume_role_policy = jsonencode({
@@ -60,7 +81,7 @@ resource "aws_iam_role" "glue_crawler_role" {
             }
         ]
     })
-    managed_policy_arns = [aws_iam_policy.read_datalake_policy.arn]
+    managed_policy_arns = [aws_iam_policy.read_datalake_policy.arn, aws_iam_policy.logs_policy.arn]
 }
 
 resource "aws_iam_role_policy_attachment" "glue_crawler_role_policy_attachment_2" {
@@ -96,7 +117,7 @@ resource "aws_glue_crawler" "raw_crawler" {
 }
 
 resource "aws_glue_crawler" "stage_crawler" {
-  database_name = aws_glue_catalog_database.raw_database.name
+  database_name = aws_glue_catalog_database.stage_database.name
   name          = "political_data_lake_stage_crawler"
   description   = "Crawler for political data lake stage data"
   role          = aws_iam_role.glue_crawler_role.arn
@@ -114,7 +135,7 @@ resource "aws_glue_crawler" "stage_crawler" {
 }
 
 resource "aws_glue_crawler" "analytics_crawler" {
-  database_name = aws_glue_catalog_database.raw_database.name
+  database_name = aws_glue_catalog_database.analytics_database.name
   name          = "political_data_lake_analytics_crawler"
   description   = "Crawler for political data lake analytics data"
   role          = aws_iam_role.glue_crawler_role.arn
