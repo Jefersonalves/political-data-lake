@@ -31,9 +31,9 @@ default_args = {
 }
 
 with DAG(
-    "invoke_lambda_ingestion_dag",
+    "querido_diario_pipeline_dag",
     default_args=default_args,
-    description="A DAG to invoke the Lambda function for ingestion",
+    description="Run querido diario data pipeline",
     schedule_interval="0 0 * * *",
     start_date=datetime(2024, 4, 1),
     tags=["data-engineer", "ingestion"],
