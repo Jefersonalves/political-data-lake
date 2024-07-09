@@ -2,10 +2,26 @@ from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.operators.emr import EmrServerlessStartJobOperator
 from airflow.providers.amazon.aws.operators.lambda_function import (
     LambdaInvokeFunctionOperator,
 )
+
+
+def upload_directory_to_s3(aws_conn_id, local_directory, bucket_name):
+    import logging
+    import os
+
+    s3_hook = S3Hook(aws_conn_id=aws_conn_id)
+    for root, _, files in os.walk(local_directory):
+        for file in files:
+            local_path = os.path.join(root, file)
+            s3_key = os.path.relpath(local_path, local_directory)
+            s3_hook.load_file(
+                filename=local_path, key=s3_key, bucket_name=bucket_name, replace=True
+            )
+            logging.info(f"Uploaded {local_path} to s3://{bucket_name}/{s3_key}")
 
 
 def fetch_target_territories(date: str):
@@ -48,6 +64,16 @@ with DAG(
         provide_context=True,
     )
 
+    update_scripts = PythonOperator(
+        task_id="update_scripts",
+        python_callable=upload_directory_to_s3,
+        op_kwargs={
+            "aws_conn_id": "aws_politicaldatalake",
+            "local_directory": "/opt/airflow/dags/scripts",
+            "bucket_name": "political-datalake-scripts",
+        },
+    )
+
     # https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dynamic-task-mapping.html
     ingest_data = LambdaInvokeFunctionOperator.partial(
         task_id="ingest_data",
@@ -82,9 +108,6 @@ with DAG(
         },
     )
 
-    (
-        fetch_territories
-        >> ingest_data
-        >> process_raw_to_stage
-        >> process_stage_to_analytics
-    )
+    fetch_territories >> ingest_data
+    [ingest_data, update_scripts] >> process_raw_to_stage
+    process_raw_to_stage >> process_stage_to_analytics
