@@ -57,14 +57,14 @@ with DAG(
     catchup=True,
 ) as dag:
 
-    fetch_territories = PythonOperator(
+    fetch_territories_task = PythonOperator(
         task_id="fetch_territories",
         python_callable=fetch_target_territories,
         op_args=["{{ ds }}"],
         provide_context=True,
     )
 
-    update_scripts = PythonOperator(
+    update_scripts_task = PythonOperator(
         task_id="update_scripts",
         python_callable=upload_directory_to_s3,
         op_kwargs={
@@ -75,14 +75,14 @@ with DAG(
     )
 
     # https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dynamic-task-mapping.html
-    ingest_data = LambdaInvokeFunctionOperator.partial(
+    ingest_data_task = LambdaInvokeFunctionOperator.partial(
         task_id="ingest_data",
-        function_name="ingestion_lambda",
+        function_name="{{ var.value.lambda_ingestion_function }}",
         aws_conn_id="aws_politicaldatalake",
         region_name="sa-east-1",
-    ).expand(payload=fetch_territories.output)
+    ).expand(payload=fetch_territories_task.output)
 
-    process_raw_to_stage = EmrServerlessStartJobOperator(
+    process_raw_to_stage_task = EmrServerlessStartJobOperator(
         aws_conn_id="aws_politicaldatalake",
         task_id="process_raw_to_stage",
         application_id="{{ var.value.emr_serverless_application_id }}",
@@ -95,7 +95,7 @@ with DAG(
         },
     )
 
-    process_stage_to_analytics = EmrServerlessStartJobOperator(
+    process_stage_to_analytics_task = EmrServerlessStartJobOperator(
         aws_conn_id="aws_politicaldatalake",
         task_id="process_stage_to_analytics",
         application_id="{{ var.value.emr_serverless_application_id }}",
@@ -108,6 +108,6 @@ with DAG(
         },
     )
 
-    fetch_territories >> ingest_data
-    [ingest_data, update_scripts] >> process_raw_to_stage
-    process_raw_to_stage >> process_stage_to_analytics
+    fetch_territories_task >> ingest_data_task
+    [ingest_data_task, update_scripts_task] >> process_raw_to_stage_task
+    process_raw_to_stage_task >> process_stage_to_analytics_task
