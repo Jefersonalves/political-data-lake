@@ -70,7 +70,7 @@ with DAG(
         op_kwargs={
             "aws_conn_id": "aws_politicaldatalake",
             "local_directory": "/opt/airflow/dags/scripts",
-            "bucket_name": "political-datalake-scripts",
+            "bucket_name": "{{ var.value.s3_scripts_bucket }}",
         },
     )
 
@@ -89,7 +89,7 @@ with DAG(
         execution_role_arn="{{ var.value.emr_serverless_execution_role_arn }}",
         job_driver={
             "sparkSubmit": {
-                "entryPoint": "s3://political-datalake-scripts/raw_to_stage.py",
+                "entryPoint": "s3://{{ var.value.s3_scripts_bucket }}/raw_to_stage.py",
                 "sparkSubmitParameters": "--conf spark.hadoop.hive.metastore.client.factory.class=com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory",
             }
         },
@@ -102,7 +102,7 @@ with DAG(
         execution_role_arn="{{ var.value.emr_serverless_execution_role_arn }}",
         job_driver={
             "sparkSubmit": {
-                "entryPoint": "s3://political-datalake-scripts/stage_to_analytics.py",
+                "entryPoint": "s3://{{ var.value.s3_scripts_bucket }}/stage_to_analytics.py",
                 "sparkSubmitParameters": "--conf spark.hadoop.hive.metastore.client.factory.class=com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory",
             }
         },
