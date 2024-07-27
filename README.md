@@ -6,7 +6,7 @@ End to end data lake project to analyze the brazilian political scenario.
 
 The project architecture is represented in the diagram below:
 
-![Architecture](./diagrams/political-data-lake.png)
+![Architecture](./assets/political-data-lake.png)
 
 All the project is orchestrated by [Airflow](https://airflow.apache.org).
 The Airflow contains a DAG that invokes a AWS Lambda function that ingests data from [Querido Diário](https://queridodiario.ok.org.br) and stores it in a [AWS S3](https://aws.amazon.com/s3) bucket.
