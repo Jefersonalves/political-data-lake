@@ -9,7 +9,12 @@ terraform {
 
 provider "aws" {
   region  = "sa-east-1"
-  profile = "pessoal"
+  profile = "politicaldatalake"
+}
+
+
+resource "aws_s3_bucket" "scripts_bucket" {
+    bucket = "political-datalake-scripts"
 }
 
 
@@ -123,7 +128,7 @@ resource "aws_emrserverless_application" "emr_app" {
     initial_capacity_type = "Executor"
 
     initial_capacity_config {
-      worker_count = 2
+      worker_count = 1
       worker_configuration {
         cpu    = "4 vCPU"
         memory = "16 GB"
@@ -133,9 +138,9 @@ resource "aws_emrserverless_application" "emr_app" {
   }
 
   maximum_capacity {
-    cpu    = "12 vCPU"
-    memory = "48 GB"
-    disk = "60 GB"
+    cpu    = "24 vCPU"
+    memory = "96 GB"
+    disk = "120 GB"
   }
 
 }
@@ -143,4 +148,8 @@ resource "aws_emrserverless_application" "emr_app" {
 
 output emr_serverless_application_id {
     value = aws_emrserverless_application.emr_app.id
+}
+
+output emr_serverless_role_arn {
+    value = aws_iam_role.emr_serverless_role.arn
 }
